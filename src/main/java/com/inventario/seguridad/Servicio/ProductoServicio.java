@@ -3,6 +3,7 @@ package com.inventario.seguridad.Servicio;
 import com.inventario.seguridad.Entidad.Producto;
 import com.inventario.seguridad.Repositorio.ProductoRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +19,16 @@ public class ProductoServicio {
     public Optional<Producto> getProducto(Long id){
         return productoRepositorio.findById(id);
     }
-    public void guardar (Producto producto){
+    public void guardar(Producto producto){
         productoRepositorio.save(producto);
     }
-    public void eliminar (Long id){
-        productoRepositorio.deleteById(id);
+    public void eliminar(Long id){
+        try {
+            productoRepositorio.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            // Manejar el caso donde el producto no existe
+            System.out.println("El producto con ID " + id + " no existe.");
+        }
     }
-
 
 }

@@ -16,40 +16,53 @@ import java.util.Optional;
 @Controller
 @RequestMapping
 public class ProductoControlador {
+
     @Autowired
     private ProductoServicio productoServicio;
 
-    //leer productos
+    @GetMapping("/home")
+    public String home(){
+        return "/index";
+    }
+
+    // Leer productos
     @GetMapping("/productos")
     public String mostrarProductos(Model model){
         List<Producto> productos = productoServicio.getProducto();
         model.addAttribute("productos", productos);
-        return "/productos/vista_productos";
+        return "/productos/producto";
     }
-    //crear productos
+
+    // Crear productos
     @GetMapping("/productos/modal")
     public String modal(Model model){
         model.addAttribute("producto", new Producto());
         return "/productos/modal";
     }
+
     @PostMapping("/productos/guardar")
     public String guardar(Producto producto){
         productoServicio.guardar(producto);
         return "redirect:/productos";
     }
-    //actualizar datos del prodcutos
+
+    // Actualizar datos del producto
     @GetMapping("/productos/editar/{productoId}")
     public String actualiza(@PathVariable Long productoId, Model model){
         Optional<Producto> producto = productoServicio.getProducto(productoId);
-        model.addAttribute("productos", producto);
+        if (producto.isPresent()) {
+            model.addAttribute("producto", producto.get());
+        } else {
+            // Manejar el caso donde el producto no existe
+            return "redirect:/productos";
+        }
         return "/productos/modal";
     }
-    //ELIMINAR
+
+    // Eliminar
     @GetMapping("/productos/eliminar/{productoId}")
-    public String elimina(@PathVariable("productoId") Long productoId)
-    {
+    public String elimina(@PathVariable("productoId") Long productoId){
         productoServicio.eliminar(productoId);
         return "redirect:/productos";
     }
-
 }
