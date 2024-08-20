@@ -58,6 +58,7 @@ public class IniciarDatos {
                 List<Rol> userRoles = rolRepositorio.findByName("ROLE_USER");
                 if (!userRoles.isEmpty()) {
                     user.setRoles(userRoles);
+
                 }
                 credencialesUsuarioRepositorio.save(user);
             }
