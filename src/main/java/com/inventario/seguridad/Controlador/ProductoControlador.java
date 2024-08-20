@@ -33,18 +33,21 @@ public class ProductoControlador {
         return "/productos/producto";
     }
 
+
     // Crear productos
     @GetMapping("/productos/modal")
-    public String modal(Model model){
+    public String modalFormulario(Model model){
+
         model.addAttribute("producto", new Producto());
         return "/productos/modal";
     }
-
     @PostMapping("/productos/guardar")
     public String guardar(Producto producto){
+        producto.calcularTotal(); // Calcula el total antes de guardar
         productoServicio.guardar(producto);
         return "redirect:/productos";
     }
+
 
     // Actualizar datos del producto
     @GetMapping("/productos/editar/{productoId}")
